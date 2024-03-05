@@ -1,0 +1,10 @@
+{
+    "name": "ELCOT",
+    "age":"30",
+    "title":"Json Processing",
+    "chapter":["chaper1","chaper2","chapter3,chapter4",""],
+    "dataDemonstration":[{"country":"Austrial"},{"Address":"sween City"},{"roomNO":"222/A"}],
+    "reference":null,
+    "AdressIsExits":true
+    
+}

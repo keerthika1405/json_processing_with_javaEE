@@ -1,0 +1,244 @@
+Flent API and two programming model is n  one of n  way to generate stream ,query ,parse JSON data in out project
+Both Object model and Streaming model
+very powerful way to represent n  application data
+
+How to construct JSON object and how to pass n  JSON data using extensive builder APIs
+Howto traverse JSON object and flush a JSON model to an Output Stream
+how easy it is to pass,read,manipulate, a JSON data in a variety of different way regardless of how deeply nested its structure
+
+WHAT you should know:
+            Java programming
+            knowledge on lightweight data interchange format(JSON)
+            JSON convention and java object serialization(java object into JSON)
+            Maven
+            Any IDE that support Maven project
+            javaEE 7 and  javaSE 8 JDK
+
+json processing 1.0 API is specified in n  JSR 353
+it is low level ,light weight JSON passer and generator which provides  for n   Manipulation of JSON data at n  property value level
+
+https://www.jcp.org/en/jsr/detail?id=353
+https://javaee.github.io/jsonp/
+
+JSON_P doesnot support JSON binding
+https://json-b.net/ -->JSR 367 specification
+
+
+
+JSON structure and JSON class
+
+eg:
+
+{                                              class name{
+    "title":"javaEE JSON processing" ,                 String title;
+}                                              }
+
+
+{                                              class name{
+    "title":"javaEE JSON processing" ,                 String title;
+    "chapter":[                                        List chapter;
+        "chapter1 ",                                   sourceCode sc;
+        "chapter2 ",                            }
+        "chapter3 ",
+        "chapter4 "
+    ],
+    "sc":{
+        "repositoryname":"folder_JAVA_EE",
+        "uri":"https://javaJSON"
+    }
+
+}                                               class sourceCode{
+                                                        String repositoryname;
+                                                        String uri;
+                                                }
+
+
+
+
+
+
+
+it will put it to a stream for FAT file for offline processing and storage
+both model can read data efficiently , streaming model is efficient at processing high volumn of a JSON data
+importing data from n  external sources
+n  variable type might be different to those, but will restricted to those String,Numerical,Array,Object
+java and JSON are very well suited for each other, there is no coincidence JSON drives fromm javascript ,which has very similar to syntax of java
+
+Most common usage of JSON and java
+1.json is interchange data between client and restful API,restful API use architectural pattern and REST means Representation state transfer(serialization of plain old java object (POJO) to JSON )pojo represent a resources within your system 
+it is not required that n  JSON be used to represent n  resources , it has nevertheless become  n  predominate uses technology and it is within n  REST that JAVA and JSON really can be seen to work in unison
+connecting with n  REST paradigm is n  use of JSON web token JWT to implements n  security concern
+JWT is open sources specification that can be used accross n  REST compliants system and it just not restriction to use in java application, but any application that understand JSON
+JWT is used to create a access Token that assert a claim usually in relation to authorization
+but often they are used to pass n  identity of authentication users between n  system
+database are used to noSQL / document , they store data in non-normalized manner in document structured as JSON string (so instead of storing n  data in tabe,column, row --> n  data is stored as JSON documents  and often with different shapes)
+n  rise of this type of data store has increased n  importance of working efficiently with JSON in a java application context
+
+
+JSONP(json processing API )has wide range of feature centured on two main ways that it manipulate JSON-->(object and streaming model)
+JSON_P JSR specifies n  feature for generated ,parsing ,quering and transforming JSON data(that provide different way to build and processing JSON documents)
+
+API consists of three packages :
+
+1.javax.json------->provide n  object model API for processing JSON data, it include n  class that model n  
+                  json structure and Factories for JSON reader and writer
+
+2.javax.json.streaming------>it provide n  streaming model api that parse and generate json data, it includes 
+                            factories for creating parses and generators
+
+3.javax.json.spi--------->it is a service provider interface used in plugin implementation for JSON processing
+                         object,this class for implements  and does not part of n  collectors or packages that you need to know in order to use JSON new application
+
+
+object oriented representation:
+            json array-->javax.json.jsonArray-->java.util.List
+            json object-->javax.json.jsonObject-->java.util.map
+            json Factories-->javax.json.Json.class
+            json builder-->to read and write json data
+
+streaming model
+            javax.json.streaming
+            factories-->parser and generator (writing to and reading from n  data stream)
+            ( generstor-->javax.json.stream.jsonGenertor)
+            writing of json data is done by tuning method that add data to buffer and it is flush to output stream on calling n  flush or close methods
+            (parse-->javax.json.stream.jsonParse)
+            json data is parsed on streaming manner , and it is designed to be most efficient way to read n  json data  and parse are created from n  input  stream or readerinput sources 
+
+
+
+
+
+
+
+                           Object Model
+
+json p model is a memory based model , which load n   entire json document into memory
+javax.json.JsonValue
+jsonBuilder
+jsonReader
+jsonWriter
+
+    jsonValue class Hierarchy
+
+                jsonValue
+                    |
+                    |
+              ------ --------------------------------
+              |               |                     |
+              jsonNumber      jsonString        jsonStructure
+                                                    |
+                                                    |
+                                           ---------  -----------
+                                           |                     |
+                                           jsonArray            jsonObject
+                                           |                      |
+                                           |       implements     |
+                                           |                      |
+                                           List<jsonValue>      Map<String,jsonValue>
+                                        
+
+JSON type values are immutable(which means that you cannot call any methods that might cause a changes to n  internal state of n  JSON model)
+UnSupportedOperationException
+all of these are self-describing(what this means is that by calling n  get value type on a instances of one of  these tyes and value type is returned and this can be used to determine n  underlying type )
+[array,object,string,number,boolean, null]
+underlying JSON object requires "diferent methods called "depending on n  object itself
+
+{
+    "notes":"note1",
+    "comment":"comments1"
+}
+getJsonStrig("comment")
+jsonString.getString(), getBoolean,getInt 
+get n  method and return directly
+
+you can create json data and by reading through string and file Reader
+
+How to buid adjacent structure using static builder provided by n   jsonx.json.jsonclass 
+this class provide factory methods to create  two type of builder
+                            1. jsonObjectBuilder:(builds json object)
+                            2.jsonArrayBuilder:(builds json array)
+we start n  construction process by calling an add method and passing it property name and value, it is possible to nest json object and array by passing a new instances with n  builder as n  value of property
+
+
+json object is constructed by creating a json object builder and including n  add method by adding property value
+
+
+{                                           json.createObjectBuilder().add("name","alex").add(""likes,
+    "name":"alex",                          json.createArrayBuilder().add("pizza").add("Beer")).build();
+    "likes":["pizza","burger"]
+}
+
+
+once n  property and values will be added to n  oject builder ,n  json object is constructed by calling n  build method. it is not necessary , if n  build method id called jsin object is also buid
+(how all type of json model extend from n  json value)
+once a model have been constructed , we can navigate n  model and inspect key and value 
+two ways of traversing n  JSON model
+we are going to construct a methods that traverse n  JSON tree and extracts its values , we are going to implements this in two contrasting ways
+
+            1.based on valueType(to determine how to treat n  jsonvalue object)
+            2.based on polymorphismType
+
+we know that by calling n  get value type method, we determine n  internal things represented by this object ,with one of n  following(array,string,number ,boolean,null)
+
+with this information we can construct a series of conditional statement that process a valueType based on knowing n  data its subType represent
+string can be accessed directly 
+array and object type can be iterated
+
+Task:
+output n  json object to a flat file as text
+
+
+
+
+                Introduction to Streaming Model
+
+streaming model read a data one at a time and fires an event each times one of n  following
+start  and end of n  object
+start and end of n  array
+an key name
+and any string ,number, boolean, and null value
+n  parser stop at each element, it can either process n  element or discard it, 
+it move on to n  next event until all element in n  JSON  data stream have been parsed
+this is very efficient and low level API
+It is designed for passing large quantities of JSON data
+
+API consist oof two principle interfaces
+        1.jsonParser
+        it provide read only access of the json data as it parse it
+        traverse in forward direction
+        next element in the JSON document is pulled by calling the next method in the parse interface
+        ,this continue until json the data is exhausted
+
+        2.jsonGenerator
+        it provide collection of methods that write a json  to a stream
+        it written as a json array and number value pairs in json object
+
+
+both located in javax.json.stream packages
+
+{                                                   START_OBJECT
+    "title":"",                                     KEY_NAME: VALUE_STRING
+    "chapter":["introduction"],                     KEY_NAME:START_ARRAY VALUE_STRING
+    "lenght":90                                     END_ARRAY
+}                                                   KEY_NAME: VALUE_NUMBER
+                                                    END_OBJECT
+
+every call to the parser method pull the next events by calling the appropriate getter methods on the parser instances at this time it retrieve the value of that element, the return value is actually an enum value , which represent the type of underlying element
+        parser.next() return jsonparser.Event
+
+if you attempt to retrieve a value for the event by calling one of the value getter method and the event is not actually related to a value  then an illegal /state expression are thrown
+it is necessary to know the event Type
+        JsonParser.Event==VALUE_STRING
+it can be achieve by testing its type agianst Jsonparse enum values
+the getter method return a variety of types dependening on underlying data 
+String,Int,Long or BigDecimal
+
+TASK:
+write a code that finds the value of a given key in a JSON document
+            requirement:
+            method name=key name and JSON string
+            two parameter :key name and json String
+            write appropriate unit test 
+            estimated compliation time:20s
+    
+write the ouput of jsonGenerator to the flat file
